@@ -1,27 +1,37 @@
 use actix_web::middleware::Logger;
 use actix_web::web::Data;
 use actix_web::{get, post, web, App, HttpRequest, HttpResponse, HttpServer, Responder};
-use chrono::Local;
 use chrono::TimeZone;
+use chrono::{Local, NaiveDateTime};
+use diesel::{Identifiable, Insertable, Queryable};
 use serde::{Deserialize, Serialize};
+use utils::errors::MyError;
+use utils::state::AppState;
 mod constants;
+mod schema;
+mod store;
 mod utils;
+
+#[macro_use]
+extern crate diesel;
 
 #[get("/")]
 async fn hello() -> impl Responder {
     println!("hello-[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[");
     HttpResponse::Ok().body("Hello world!")
 }
+pub type ApiResponse = Result<HttpResponse, MyError>;
 
 #[post("/weight")]
-async fn weight(form: web::Json<Request>) -> impl Responder {
-    println!("{:?}", form);
-    println!("{:?}", Local.timestamp_opt(form.timestamp as i64, 0));
-    HttpResponse::Ok().body("Hey there!")
+async fn weight(state: web::Data<AppState>, form: web::Json<Request>) -> ApiResponse {
+    let conn = state.get_db_conn()?;
+    store::save(&conn, form.weight, form.timestamp)?;
+    Ok(HttpResponse::Ok().json({}))
 }
+
 #[derive(Deserialize, Serialize, Debug)]
 struct Request {
-    timestamp: i32,
+    timestamp: i64,
     weight: f32,
 }
 
