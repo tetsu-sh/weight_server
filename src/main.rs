@@ -25,7 +25,7 @@ pub type ApiResponse = Result<HttpResponse, MyError>;
 #[post("/weight")]
 async fn weight(state: web::Data<AppState>, form: web::Json<Request>) -> ApiResponse {
     let conn = state.get_db_conn()?;
-    store::save(&conn, form.weight, form.timestamp)?;
+    store::save(&conn, form.weight, form.timestamp, form.device_id)?;
     Ok(HttpResponse::Ok().json({}))
 }
 
@@ -33,6 +33,7 @@ async fn weight(state: web::Data<AppState>, form: web::Json<Request>) -> ApiResp
 struct Request {
     timestamp: i64,
     weight: f32,
+    device_id: i32,
 }
 
 #[actix_web::main]
