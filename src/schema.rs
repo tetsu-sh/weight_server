@@ -18,7 +18,4 @@ diesel::table! {
     }
 }
 
-diesel::allow_tables_to_appear_in_same_query!(
-    devices,
-    weights,
-);
+diesel::allow_tables_to_appear_in_same_query!(devices, weights,);
