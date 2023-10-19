@@ -1,6 +1,7 @@
 use crate::schema::weights::{self, timestamp};
 use crate::utils::errors::MyError;
-use crate::{FetchWeightResponse, Weight};
+use crate::FetchWeightResponse;
+use crate::Weight;
 use chrono::{DateTime as CDateTime, Local, TimeZone};
 use chrono::{NaiveDateTime, Utc};
 use diesel::{prelude::*, sql_query};

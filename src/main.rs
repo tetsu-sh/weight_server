@@ -53,6 +53,25 @@ struct GetWeightRequest {
     datetime_from: DateTime<Local>,
     datetime_to: DateTime<Local>,
 }
+
+
+#[derive(Deserialize, Serialize, Debug)]
+pub struct FetchWeightResponse{
+    weights: Vec<Weight>,
+}
+
+#[derive(Deserialize, Serialize, Debug)]
+struct Weight{
+    id: i32,
+    timestamp: DateTime<Local>,
+    created_at: DateTime<Local>,
+    weight: f32,
+    device_id: i32,
+}
+
+
+
+#[actix_web::main] // or #[tokio::main]
 async fn main() -> std::io::Result<()> {
     env_logger::init_from_env(env_logger::Env::new().default_filter_or("debug"));
 
